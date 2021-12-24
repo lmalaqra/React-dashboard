@@ -70,7 +70,7 @@ export default function Card(props) {
             />{" "}
             Total number of signed- In
           </h2>
-          <h1> {props.data.signedC} </h1>
+          <h1> {props.isLoaded ? props.data.signedC : "...Loading"} </h1>
         </div>
         <div
           style={{ backgroundColor: "rgb(14, 202, 70)" }}
@@ -87,7 +87,7 @@ export default function Card(props) {
             />{" "}
             Total number of Active Users
           </h2>
-          <h1> {props.data.activeC} </h1>
+          <h1> {props.isLoaded ? props.data.activeC : "...Loading"} </h1>
         </div>
 
         <div style={{ backgroundColor: "#F2F2F2" }} className="card-body">
@@ -102,7 +102,7 @@ export default function Card(props) {
             />{" "}
             Total number of inactive users
           </h2>
-          <h1> {props.data.inactiveC} </h1>
+          <h1> {props.isLoaded ? props.data.inactiveC : "...Loading"} </h1>
         </div>
       </div>
       <div className="table-head">
@@ -257,13 +257,15 @@ export default function Card(props) {
       {props.isLoaded ? (
         <Table isLoaded={props.isLoaded} value={testValues} data={data} />
       ) : (
-        <Loader
-          type="Puff"
-          color="#00BFFF"
-          height={100}
-          width={100}
-          timeout={3000} //3 secs
-        />
+        <div className="loader">
+          <Loader
+            type="Puff"
+            color="#00BFFF"
+            height={100}
+            width={100}
+            timeout={3000} //3 secs
+          />
+        </div>
       )}
     </div>
   );

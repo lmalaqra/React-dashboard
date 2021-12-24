@@ -11,7 +11,10 @@ export default function Content(props) {
   const [title, setTitle] = useState("Customer Insights");
   const [selectValue, setSelectValue] = useState("all");
 
-  const url = "http://localhost:7000/customers/" + selectValue;
+  let url =
+    selectValue == "all"
+      ? "http://localhost:7000/customers"
+      : "http://localhost:7000/customers/" + selectValue;
 
   const [data, updateData] = useState({
     isLoaded: props.isLoaded,
