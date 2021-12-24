@@ -17,7 +17,7 @@ export default function SideBar(props) {
         id="link"
         style={{
           backgroundColor:
-            props.title == "Customer Insights" ? "#f27272" : "transparent",
+            props.title == "Customer Insights" ? "#81BF94" : "transparent",
         }}
       >
         <h2
@@ -34,7 +34,7 @@ export default function SideBar(props) {
         id="link"
         style={{
           backgroundColor:
-            props.title != "Customer Insights" ? "#f27272" : "transparent",
+            props.title != "Customer Insights" ? "#81BF94" : "transparent",
         }}
       >
         <h2

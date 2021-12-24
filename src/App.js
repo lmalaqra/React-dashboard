@@ -3,62 +3,38 @@ import "./App.css";
 import Header from "./components/Header";
 import useWindowDimensions from "./components/getWindoDimentions";
 import Content from "./components/Content";
+import Loader from "react-loader-spinner";
 
-function delayed_render(async_fun, deps = []) {
-  const [output, setOutput] = useState();
-  useEffect(async () => setOutput(await async_fun()), deps);
-  return output === undefined ? null : output;
-}
-
-function App(props) {
-  const [data, updateData] = useState();
-
-  return delayed_render(async () => {
-    const resp = await fetch("http://localhost:7000/customers"); // await here is OK!
-    const json = await resp.json();
-    updateData(json);
-
-    return (
-      <div>
-        <Header /> <Content data={json} />
-      </div>
-    );
-  });
-}
-
-// const App = () => {
-//   useEffect(() => {
-//     const getData = async () => {
-//       const resp = await fetch("http://localhost:7000/customers");
-//       const json = await resp.json();
-//       updateData(json);
-//     };
-//     getData();
-//   }, []);
-
-//   return data && <Content data={data} />;
-// };
-
-// useEffect(() => {
-//   fetch()
-//     .then((res) => res.json())
-//     .then((result) => {
-//       await setData(JSON.parse(result));
-//       console.log(data);
-//     });
-// }, 1);
-
-// const [click, setclick] = useState(false);
-
-// function getState(State) {
-//   return !State;
+// function delayed_render(async_fun, deps = []) {
+//   const [output, setOutput] = useState();
+//   useEffect(async () => setOutput(await async_fun()), deps);
+//   return output === undefined ? null : output;
 // }
 
-// return (
-//   <div>
-//     <Header width={width} />
-//     <Content data={data} width={width} height={height} />
-//   </div>
-// );
+export default function App(props) {
+  const [data, updateData] = useState({ isLoaded: false });
+  useEffect(() => {
+    fetch("http://localhost:7000/customers")
+      .then(async (response) => {
+        const fetchedData = await response.json();
 
-export default App;
+        updateData({ isLoaded: true, customerData: fetchedData });
+        console.log(fetchedData);
+      })
+      .catch((error) => {
+        updateData({ isLoaded: false, errorMessage: error.toString() });
+        console.error("There was an error!", error);
+      });
+  }, 1);
+
+  return (
+    <div className="god-container">
+      <Header />{" "}
+      {data.isLoaded ? (
+        <Content isLoaded={data.isLoaded} data={data.customerData} />
+      ) : (
+        <Loader />
+      )}
+    </div>
+  );
+}
