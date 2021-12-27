@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 287.39 286.69">
+    <title>circles_2</title>
+    <g id="Layer_2" data-name="Layer 2">
+        <g id="Layer_1-2" data-name="Layer 1">
+            <path d="M144.12,5a138.24,138.24,0,0,0,0,276.48" fill="none" stroke="black" stroke-miterlimit="10" stroke-width="10" />
+            <path d="M144.91,5.21a138.24,138.24,0,0,0,0,276.48" fill="none" stroke="#a7a9ac" stroke-miterlimit="10" stroke-width="10" />
+            <path d="M144.12,5C67.78,5,5,68.78,5,145.12S67.78,281.48,144.12,281.48" fill="none" stroke="transparent" stroke-miterlimit="10" stroke-width="10" />
+            <path d="M144.15,5a138.24,138.24,0,0,1,0,276.48" fill="none" stroke="transperant" stroke-miterlimit="10" stroke-width="10" />
+            <path d="M144.12,281.48h0" fill="none" stroke="#231f20" stroke-miterlimit="10" />
+        </g>
+    </g>
+</svg>

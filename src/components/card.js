@@ -2,6 +2,9 @@ import React, { useState, useEffect, useRef } from "react";
 import ".././App.css";
 import Table from "./Tabel";
 import Loader from "react-loader-spinner";
+import StatsCard from "./StatsCard";
+import Dropdown from "react-dropdown";
+import "react-dropdown/style.css";
 
 export default function Card(props) {
   const wrapperRef = useRef(null);
@@ -47,224 +50,213 @@ export default function Card(props) {
   function handleClick() {
     setfilterState((prev) => !prev);
   }
+  const options = [
+    { value: "lastWeek", label: "Last Week" },
+    { value: "lastMonth", label: "Last Month" },
+    { value: "lastYear", label: "Last Year" },
+    { value: "all", label: "All" },
+  ];
 
   return (
-    <div className="card">
-      <img
-        className="stats"
-        style={{ width: "40px" }}
-        src={require(".././images/stats.svg")}
-      />
-      <h1 className="stats">Stats</h1>
-
-      <div className="card-main">
-        <div style={{ backgroundColor: "#F2E7AE" }} className="card-body">
-          <h2>
-            <img
-              style={{
-                color: "block",
-                width: "25px",
-                marginRight: "15px",
-              }}
-              src={require(".././images/people.svg")}
-            />{" "}
-            Total number of signed- In
-          </h2>
-          <h1> {props.data.signedC} </h1>
+    <div>
+      <div className="card">
+        <div className="discription">
+          <div>
+            <h1 className="stats"> Stats</h1>
+          </div>
+          <Dropdown
+            options={options}
+            onChange={(value) => {
+              props.onSelect(value);
+            }}
+            placeholder="Select time intervel"
+            value={props.value}
+          />
         </div>
-        <div
-          style={{ backgroundColor: "rgb(14, 202, 70)" }}
-          className="card-body"
+        <h2
+          style={{
+            fontSize: "0.8em",
+            color: "#b3b4b5",
+            marginBottom: "30px",
+          }}
         >
-          <h2>
-            <img
-              style={{
-                color: "black",
-                width: "25px",
-                marginRight: "15px",
-              }}
-              src={require(".././images/people.svg")}
-            />{" "}
-            Total number of Active Users
-          </h2>
-          <h1> {props.data.activeC} </h1>
-        </div>
-
-        <div style={{ backgroundColor: "#F2F2F2" }} className="card-body">
-          <h2>
-            <img
-              style={{
-                color: "block",
-                width: "25px",
-                marginRight: "15px",
-              }}
-              src={require(".././images/people.svg")}
-            />{" "}
-            Total number of inactive users
-          </h2>
-          <h1> {props.data.inactiveC} </h1>
+          Welcome to userStats
+        </h2>
+        <div className="card-main">
+          <StatsCard
+            signed={props.data.signedC}
+            active={props.data.activeC}
+            inactive={props.data.inactiveC}
+          />
         </div>
       </div>
-      <div className="table-head">
-        <h2> all the customers</h2>
+      <div className="tabel-content">
+        <div className="table-head">
+          <h2 style={{ color: "#b3b4b5", fontSize: "1em" }}>
+            {" "}
+            Latest Customers & Activities
+          </h2>
 
-        {/* filter */}
-        <div ref={wrapperRef} className="filter">
-          <span> filter </span>
-          <img
-            className="dropdown"
-            onClick={handleClick}
-            style={{ width: "10px", height: "10px" }}
-            src={require(".././images/dropdown.png")}
-          />
-          <span>
-            {testValues.active ? (
-              <span id="filter">
-                {" "}
-                active{" "}
-                <img
-                  title="active"
-                  onClick={removeFilterValue}
-                  className="close"
-                  src={require(".././images/x.svg")}
-                />{" "}
-              </span>
-            ) : null}
-          </span>
-          <span>
-            {testValues.inactive ? (
-              <span id="filter">
-                {" "}
-                inactive{" "}
-                <img
-                  title="inactive"
-                  onClick={removeFilterValue}
-                  className="close"
-                  src={require(".././images/x.svg")}
-                />{" "}
-              </span>
-            ) : null}{" "}
-          </span>
-          <span>
-            {testValues.trial ? (
-              <span id="filter">
-                {" "}
-                on trial{" "}
-                <img
-                  title="trial"
-                  onClick={removeFilterValue}
-                  id="trial"
-                  className="close"
-                  src={require(".././images/x.svg")}
-                />{" "}
-              </span>
-            ) : null}{" "}
-          </span>
-          <span>
-            {testValues.subs ? (
-              <span id="filter">
-                {" "}
-                subeEnded{" "}
-                <img
-                  title="subs"
-                  onClick={removeFilterValue}
-                  className="close"
-                  src={require(".././images/x.svg")}
-                />{" "}
-              </span>
-            ) : null}{" "}
-          </span>
-
-          <div
-            style={{ display: filterState ? "inherit" : "none" }}
-            className="checkbox"
-          >
-            <div className="check">
+          {/* filter */}
+          <div ref={wrapperRef} className="filter">
+            <span> filter </span>
+            <img
+              className="dropdown"
+              onClick={handleClick}
+              style={{ width: "10px", height: "10px" }}
+              src={require(".././images/dropdown.png")}
+            />
+            <span>
               {testValues.active ? (
-                <img
-                  className="check-mark"
-                  src={require(".././images/check.svg")}
-                />
+                <span id="filter">
+                  {" "}
+                  active{" "}
+                  <img
+                    title="active"
+                    onClick={removeFilterValue}
+                    className="close"
+                    src={require(".././images/x.svg")}
+                  />{" "}
+                </span>
               ) : null}
-
-              <label for="active"> active </label>
-              <input
-                onClick={handleCheckClick}
-                type="checkbox"
-                id="active"
-                name="active"
-                value="active"
-                checked={testValues.active}
-              />
-            </div>
-            <div className="check">
+            </span>
+            <span>
               {testValues.inactive ? (
-                <img
-                  className="check-mark"
-                  src={require(".././images/check.svg")}
-                />
-              ) : null}
-              <label for="inactive"> inactive </label>
-
-              <input
-                onClick={handleCheckClick}
-                type="checkbox"
-                id="inactive"
-                name="inactive"
-                value="inactive"
-                checked={testValues.inactive}
-              />
-            </div>
-            <div className="check">
+                <span id="filter">
+                  {" "}
+                  inactive{" "}
+                  <img
+                    title="inactive"
+                    onClick={removeFilterValue}
+                    className="close"
+                    src={require(".././images/x.svg")}
+                  />{" "}
+                </span>
+              ) : null}{" "}
+            </span>
+            <span>
               {testValues.trial ? (
-                <img
-                  className="check-mark"
-                  src={require(".././images/check.svg")}
-                />
-              ) : null}
-              <label for="ontrial"> on trial </label>
-              <input
-                onClick={handleCheckClick}
-                type="checkbox"
-                id="ontrial"
-                name="ontrial"
-                value="trial"
-                checked={testValues.trial}
-              />
-            </div>
-
-            <div className="check">
+                <span id="filter">
+                  {" "}
+                  on trial{" "}
+                  <img
+                    title="trial"
+                    onClick={removeFilterValue}
+                    id="trial"
+                    className="close"
+                    src={require(".././images/x.svg")}
+                  />{" "}
+                </span>
+              ) : null}{" "}
+            </span>
+            <span>
               {testValues.subs ? (
-                <img
-                  className="check-mark"
-                  src={require(".././images/check.svg")}
-                />
-              ) : null}
+                <span id="filter">
+                  {" "}
+                  subeEnded{" "}
+                  <img
+                    title="subs"
+                    onClick={removeFilterValue}
+                    className="close"
+                    src={require(".././images/x.svg")}
+                  />{" "}
+                </span>
+              ) : null}{" "}
+            </span>
 
-              <label for="endedsubs"> ended subs </label>
-              <input
-                onClick={handleCheckClick}
-                type="checkbox"
-                id="endedsubs"
-                name="endedsubs"
-                value="subs"
-                checked={testValues.subs}
-              />
+            <div
+              style={{ display: filterState ? "inherit" : "none" }}
+              className="checkbox"
+            >
+              <div className="check">
+                {testValues.active ? (
+                  <img
+                    className="check-mark"
+                    src={require(".././images/check.svg")}
+                  />
+                ) : null}
+
+                <label htmlFor="active"> active </label>
+                <input
+                  onClick={handleCheckClick}
+                  type="checkbox"
+                  id="active"
+                  name="active"
+                  value="active"
+                  defaultChecked={testValues.active}
+                />
+              </div>
+              <div className="check">
+                {testValues.inactive ? (
+                  <img
+                    className="check-mark"
+                    src={require(".././images/check.svg")}
+                  />
+                ) : null}
+                <label htmlFor="inactive"> inactive </label>
+
+                <input
+                  onClick={handleCheckClick}
+                  type="checkbox"
+                  id="inactive"
+                  name="inactive"
+                  value="inactive"
+                  defaultChecked={testValues.inactive}
+                />
+              </div>
+              <div className="check">
+                {testValues.trial ? (
+                  <img
+                    className="check-mark"
+                    src={require(".././images/check.svg")}
+                  />
+                ) : null}
+                <label htmlFor="ontrial"> on trial </label>
+                <input
+                  onClick={handleCheckClick}
+                  type="checkbox"
+                  id="ontrial"
+                  name="ontrial"
+                  value="trial"
+                  defaultChecked={testValues.trial}
+                />
+              </div>
+
+              <div className="check">
+                {testValues.subs ? (
+                  <img
+                    className="check-mark"
+                    src={require(".././images/check.svg")}
+                  />
+                ) : null}
+
+                <label htmlFor="endedsubs"> ended subs </label>
+                <input
+                  onClick={handleCheckClick}
+                  type="checkbox"
+                  id="endedsubs"
+                  name="endedsubs"
+                  value="subs"
+                  defaultChecked={testValues.subs}
+                />
+              </div>
             </div>
           </div>
         </div>
+        {props.isLoaded ? (
+          <Table isLoaded={props.isLoaded} value={testValues} data={data} />
+        ) : (
+          <div className="loader">
+            <Loader
+              type="Puff"
+              color="#00BFFF"
+              height={100}
+              width={100}
+              timeout={3000} //3 secs
+            />
+          </div>
+        )}
       </div>
-      {props.isLoaded ? (
-        <Table isLoaded={props.isLoaded} value={testValues} data={data} />
-      ) : (
-        <Loader
-          type="Puff"
-          color="#00BFFF"
-          height={100}
-          width={100}
-          timeout={3000} //3 secs
-        />
-      )}
     </div>
   );
 }
