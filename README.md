@@ -1,7 +1,11 @@
 # Simple React JS Project
 
+//// npm i
+
 ## cd node server
 
-node App.js
+           //node App.js
 
-## npm start
+## cd my ReactProject
+
+     // npm start
