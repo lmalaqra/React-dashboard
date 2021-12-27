@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Loader from "react-loader-spinner";
 import Chart from "./ApecChart";
 export default function Usage(props) {
   const [data, setdata] = useState({ isLoaded: false });
+  const isMounted = useRef(true);
 
   useEffect(() => {
+    if (!isMounted.current) return;
     fetch("http://localhost:7000/usage")
       .then(async (response) => {
         const fetchedData = await response.json();
@@ -16,6 +18,9 @@ export default function Usage(props) {
         setdata({ isLoaded: false, errorMessage: error.toString() });
         console.error("There was an error!", error);
       });
+    return () => {
+      isMounted.current = false;
+    };
   }, []);
   return (
     <div>
@@ -47,7 +52,15 @@ export default function Usage(props) {
           </div>
         </div>
       ) : (
-        <Loader />
+        <div className="loader">
+          <Loader
+            type="Puff"
+            color="#00BFFF"
+            height={100}
+            width={100}
+            timeout={3000} //3 secs
+          />
+        </div>
       )}
     </div>
   );
