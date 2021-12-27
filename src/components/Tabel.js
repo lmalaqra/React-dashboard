@@ -4,9 +4,11 @@ import ".././App.css";
 import Row from "./Row";
 
 export default function Table(props) {
-  const [data, setData] = useState(props.data);
+  const [data, setData] = useState({
+    isLoaded: props.isLoaded,
+    myData: props.data,
+  });
   const [count, setcount] = useState(0);
-  filterData(props.value, data);
 
   const [title, settitle] = useState();
 
@@ -31,25 +33,22 @@ export default function Table(props) {
     }
   }
   useEffect(() => {
-    setData(filterData(props.value, data));
+    setData({ isLoaded: true, myData: filterData(props.value, data.myData) });
   }, [props.value]);
 
   useEffect(() => {
-    if (count == 0) {
-      return;
-    } else {
-      const sortedData = data.sort((a, b) =>
-        a[title] > b[title] ? 1 : b[title] > a[title] ? -1 : 0
-      );
-      setData(filterData(props.value, sortedData));
+    const sortedData = data.myData.sort((a, b) =>
+      a[title] > b[title] ? 1 : b[title] > a[title] ? -1 : 0
+    );
+    setData({ isLoaded: true, myData: filterData(props.value, sortedData) });
 
-      console.log("this has been fired");
-      console.log(title);
-    }
+    console.log("this has been fired");
+    console.log(title);
   }, [title]);
   function sortData(e) {
     const { title } = e.target;
     settitle(title);
+    data.isLoaded = false;
     setcount(count + 1);
   }
 
@@ -73,7 +72,7 @@ export default function Table(props) {
   return (
     <div className="table-container">
       <div className="table">
-        <div className="row">
+        <div className="row-head">
           <h2>
             Email{" "}
             <img
@@ -147,7 +146,19 @@ export default function Table(props) {
           <h2>Active Plan</h2>
           <h2 style={{ visibility: "hidden" }} className="active"></h2>
         </div>
-        {data.map(createRow)}
+        {data.isLoaded ? (
+          data.myData.map(createRow)
+        ) : (
+          <div className="loader">
+            <Loader
+              type="Puff"
+              color="#00BFFF"
+              height={100}
+              width={100}
+              timeout={3000} //3 secs
+            />
+          </div>
+        )}
       </div>
     </div>
   );

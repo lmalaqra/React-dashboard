@@ -243,13 +243,15 @@ span:first-child {
   overflow-y: auto;
   border-radius: 10px;
 }
-.row {
+.row,
+.row-head {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: space-evenly;
 }
-.row h2 {
+.row h2,
+.row-head h2 {
   font-size: 0.8em;
   width: 12.5%;
 }
@@ -351,4 +353,7 @@ span:first-child {
 }
 .Dropdown-control {
   border: none !important;
+}
+.row:hover {
+  background-color: #b3b4b5;
 }
