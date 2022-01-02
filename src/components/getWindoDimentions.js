@@ -29,3 +29,16 @@ export default function useWindowDimensions() {
 
   return windowDimensions;
 }
+
+function fetchedData(data) {
+  fetch("https://httpbin.org/post", {
+    method: "post",
+    headers: {
+      Accept: "application/json, text/plain, */*",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  }).then((res) => (data = res.json()));
+  return data;
+}
+export { fetchedData };

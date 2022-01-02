@@ -3,6 +3,10 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
 const cors = require("cors");
+app.use(bodyParser.urlencoded({ extended: false }));
+
+// parse application/json
+app.use(bodyParser.json());
 
 app.use(cors());
 
@@ -137,6 +141,12 @@ app.get("/customers/:time", (req, res) => {
 });
 app.get("/usage", (req, res) => {
   res.json({ totalSessions: 4000, sessionsPercentage: 0.5 });
+});
+
+app.post("/customers", (req, res) => {
+  console.log(req.body);
+  console.log("request has reached post");
+  res.json(myData);
 });
 
 app.listen(7000, () => {

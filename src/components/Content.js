@@ -9,45 +9,50 @@ import Loader from "react-loader-spinner";
 
 export default function Content(props) {
   const [title, setTitle] = useState("Customer Insights");
-  const [selectValue, setSelectValue] = useState();
-  const today = new Date();
-  const date = today.toLocaleString("default", { month: "short" });
-  const [mounted, setMounted] = useState(false);
-
-  const dateTime = date + " " + today.getDate();
-
-  const url =
-    selectValue == "all"
-      ? "http://localhost:7000/customers"
-      : "http://localhost:7000/customers/" + selectValue;
-
+  const [dataBody, setDataBody] = useState({
+    days: "",
+    filterBy: [],
+    sortBy: {},
+  });
   const [data, updateData] = useState({
     isLoaded: props.isLoaded,
     customerData: props.data,
   });
-  useEffect(() => {
-    if (mounted) {
-      fetch(url)
-        .then(async (response) => {
-          const fetchedData = await response.json();
 
-          updateData({ isLoaded: true, customerData: fetchedData });
-          console.log(fetchedData);
-        })
-        .catch((error) => {
-          updateData({ isLoaded: false, errorMessage: error.toString() });
-          console.error("There was an error!", error);
-        });
-    }
-  }, [selectValue]);
+  const today = new Date();
+  const date = today.toLocaleString("default", { month: "short" });
+
+  const dateTime = date + " " + today.getDate();
+
+  useEffect(() => {
+    fetch("http://localhost:7000/customers", {
+      method: "post",
+      headers: {
+        Accept: "application/json, text/plain, */*",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(dataBody),
+    })
+      .then(async (response) => {
+        const fetchedData = await response.json();
+
+        updateData({ isLoaded: true, customerData: fetchedData });
+        console.log(fetchedData);
+      })
+      .catch((error) => {
+        updateData({ isLoaded: false, errorMessage: error.toString() });
+        console.error("There was an error!", error);
+      });
+  }, [dataBody]);
 
   function handleClick(title) {
     setTitle(title);
   }
   function onSelect(e) {
     updateData({ isLoaded: false });
-    setSelectValue(e.value);
-    setMounted(true);
+    setDataBody((prev) => {
+      return { ...prev, days: e.value };
+    });
   }
   const options = [
     { value: "lastWeek", label: "Last Week" },
@@ -56,6 +61,17 @@ export default function Content(props) {
     { value: "all", label: "All" },
   ];
   const defaultOption = options[0];
+
+  function handleFilter(data) {
+    setDataBody((prev) => {
+      return { ...prev, filterBy: data };
+    });
+  }
+  function handleSortData(sortData) {
+    setDataBody((prev) => {
+      return { ...prev, sortBy: sortData };
+    });
+  }
 
   return (
     <div>
@@ -89,10 +105,11 @@ export default function Content(props) {
           </div>
           {title == "Customer Insights" && data.isLoaded ? (
             <Card
-              value={selectValue}
+              collectSortingInformation={handleSortData}
               onSelect={onSelect}
               isLoaded={data.isLoaded}
               data={data.customerData}
+              onFilterSelect={handleFilter}
             />
           ) : data.isLoaded ? (
             <Usage data={data} />

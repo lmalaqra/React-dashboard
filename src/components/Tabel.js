@@ -4,53 +4,27 @@ import ".././App.css";
 import Row from "./Row";
 
 export default function Table(props) {
-  const [data, setData] = useState({
-    isLoaded: props.isLoaded,
-    myData: props.data,
-  });
-  const [count, setcount] = useState(0);
+  const [data, setData] = useState(props.data);
 
-  const [title, settitle] = useState();
+  const [sortBy, setsortBy] = useState({ sortTitle: "", orderBy: undefined });
 
-  function mapMyData() {}
-
-  function filterData(values, data) {
-    if (props.isLoaded) {
-      let customerData = data;
-      if (values.active == true) {
-        customerData = customerData.filter((e) => e.isActive === true);
-      }
-      if (values.inactive) {
-        customerData = customerData.filter((e) => e.isActive == false);
-      }
-      if (values.trial) {
-        customerData = customerData.filter((e) => e.onTrial == true);
-      }
-      if (values.subs) {
-        customerData = customerData.filter((e) => e.endedSubs == true);
-      }
-      return customerData;
-    }
-  }
-  useEffect(() => {
-    setData({ isLoaded: true, myData: filterData(props.value, data.myData) });
-  }, [props.value]);
-
-  useEffect(() => {
-    const sortedData = data.myData.sort((a, b) =>
-      a[title] > b[title] ? 1 : b[title] > a[title] ? -1 : 0
-    );
-    setData({ isLoaded: true, myData: filterData(props.value, sortedData) });
-
-    console.log("this has been fired");
-    console.log(title);
-  }, [title]);
   function sortData(e) {
     const { title } = e.target;
-    settitle(title);
-    data.isLoaded = false;
-    setcount(count + 1);
+    setsortBy((prev) => {
+      if (prev.sortTitle != title) {
+        return { sortTitle: title, orderBy: true };
+      } else {
+        return { sortTitle: title, orderBy: !prev.orderBy };
+      }
+    });
   }
+  useEffect(() => {
+    if (sortBy.sortTitle == "") return;
+    props.onSortSelection({
+      title: sortBy.sortTitle,
+      orderBy: sortBy.orderBy ? "ASEN" : "DECS",
+    });
+  }, [sortBy]);
 
   function createRow(customerData, index) {
     return (
@@ -146,8 +120,8 @@ export default function Table(props) {
           <h2>Active Plan</h2>
           <h2 style={{ visibility: "hidden" }} className="active"></h2>
         </div>
-        {data.isLoaded ? (
-          data.myData.map(createRow)
+        {props.isLoaded ? (
+          data.map(createRow)
         ) : (
           <div className="loader">
             <Loader

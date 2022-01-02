@@ -5,9 +5,16 @@ import Loader from "react-loader-spinner";
 import StatsCard from "./StatsCard";
 import Dropdown from "react-dropdown";
 import "react-dropdown/style.css";
+import { fetchedData } from "./getWindoDimentions";
 
 export default function Card(props) {
+  let myObj = {
+    numOfDays: String,
+    filterBy: valueArray,
+    sortBy: String,
+  };
   const wrapperRef = useRef(null);
+  const [valueArray, setvalueArray] = useState([]);
   const [testValues, setTestValues] = useState({
     active: false,
     inactive: false,
@@ -36,15 +43,25 @@ export default function Card(props) {
       return { ...prev, [value]: checked };
     });
 
-    console.log(testValues);
+    setvalueArray((prev) => {
+      if (prev.length == 0) {
+        return [...prev, value];
+      } else if (prev.includes(value)) {
+        return prev.filter((e) => e != value);
+      } else {
+        return [...prev, value];
+      }
+    });
   }
+  useEffect(() => {
+    if (valueArray.length == 0) return;
+    props.onFilterSelect(valueArray);
+  }, [valueArray]);
 
   //  remove filter values
   function removeFilterValue(e) {
     const { title } = e.target;
-    setTestValues((prev) => {
-      return { ...prev, [title]: false };
-    });
+    setvalueArray((prev) => prev.filter((e) => e != title));
   }
   //open the filter checkbox
   function handleClick() {
@@ -106,63 +123,22 @@ export default function Card(props) {
               style={{ width: "10px", height: "10px" }}
               src={require(".././images/dropdown.png")}
             />
-            <span>
-              {testValues.active ? (
-                <span id="filter">
-                  {" "}
-                  active{" "}
-                  <img
-                    title="active"
-                    onClick={removeFilterValue}
-                    className="close"
-                    src={require(".././images/x.svg")}
-                  />{" "}
-                </span>
-              ) : null}
-            </span>
-            <span>
-              {testValues.inactive ? (
-                <span id="filter">
-                  {" "}
-                  inactive{" "}
-                  <img
-                    title="inactive"
-                    onClick={removeFilterValue}
-                    className="close"
-                    src={require(".././images/x.svg")}
-                  />{" "}
-                </span>
-              ) : null}{" "}
-            </span>
-            <span>
-              {testValues.trial ? (
-                <span id="filter">
-                  {" "}
-                  on trial{" "}
-                  <img
-                    title="trial"
-                    onClick={removeFilterValue}
-                    id="trial"
-                    className="close"
-                    src={require(".././images/x.svg")}
-                  />{" "}
-                </span>
-              ) : null}{" "}
-            </span>
-            <span>
-              {testValues.subs ? (
-                <span id="filter">
-                  {" "}
-                  subeEnded{" "}
-                  <img
-                    title="subs"
-                    onClick={removeFilterValue}
-                    className="close"
-                    src={require(".././images/x.svg")}
-                  />{" "}
-                </span>
-              ) : null}{" "}
-            </span>
+            {valueArray
+              ? valueArray.map((e, index) => {
+                  return (
+                    <span key={index} id="filter">
+                      {" "}
+                      {e}{" "}
+                      <img
+                        title={e}
+                        onClick={removeFilterValue}
+                        className="close"
+                        src={require(".././images/x.svg")}
+                      />{" "}
+                    </span>
+                  );
+                })
+              : null}
 
             <div
               style={{ display: filterState ? "inherit" : "none" }}
@@ -244,7 +220,13 @@ export default function Card(props) {
           </div>
         </div>
         {props.isLoaded ? (
-          <Table isLoaded={props.isLoaded} value={testValues} data={data} />
+          <Table
+            onSortSelection={(sortData) => {
+              props.collectSortingInformation(sortData);
+            }}
+            isLoaded={props.isLoaded}
+            data={data}
+          />
         ) : (
           <div className="loader">
             <Loader
