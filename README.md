@@ -1,4 +1,4 @@
-# Simple React JS Project
+# this is a Simple Dashboard built using React and Material UI
 
 //// npm i
 
